@@ -1,0 +1,29 @@
+Cell 1
+
+child_age = 7
+child_message = "I don't want to go to bed! I'm still playing!"
+
+result = await run_once(child_message, child_age)
+print(result)
+
+Cell 2
+
+child_age = 15
+child_message = "Stop telling me what to do! You never understand me!"
+result = await run_once(child_message, child_age)
+print(result)
+
+Cell 3
+
+child_age = 7
+child_message = "I don't want to go to bed! I'm still playing!"
+
+result = await run_full(child_message, child_age)
+print(result)
+
+Cell 4
+
+child_age = 15
+child_message = "Stop telling me what to do! You never understand me!"
+result = await run_full(child_message, child_age)
+print(result)
