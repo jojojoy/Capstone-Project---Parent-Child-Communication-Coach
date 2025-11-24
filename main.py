@@ -1,13 +1,15 @@
 import os
 import asyncio
+from typing import Optional
+
 from google import genai
 
-MODEL_ID = "gemini-2.0-flash-001"
+MODEL_ID = os.getenv("GENAI_MODEL_ID", "gemini-2.0-flash-001")
 
 
 def get_client() -> genai.Client:
-    """Initialize a Gemini client using the GOOGLE_API_KEY environment variable."""
-    api_key = os.environ.get("GOOGLE_API_KEY")
+    """Create a Gemini client using the GOOGLE_API_KEY environment variable."""
+    api_key: Optional[str] = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
         raise RuntimeError(
             "GOOGLE_API_KEY is not set. Please configure it before running."
@@ -16,7 +18,9 @@ def get_client() -> genai.Client:
 
 
 async def run_once(child_message: str, child_age: int) -> str:
-    """Lightweight version: emotion + needs analysis only."""
+    """
+    Lightweight version: only emotion and needs analysis.
+    """
     client = get_client()
 
     prompt = f"""
@@ -30,7 +34,7 @@ A parent comes to you with this situation:
 Please:
 1. Explain the child's likely emotions.
 2. Identify the child's underlying needs (2–4 items).
-3. Keep the answer short (1–2 paragraphs + a bullet list).
+3. Keep the answer short (1–2 paragraphs and a bullet list).
 
 Respond in clear English.
 """
@@ -43,7 +47,9 @@ Respond in clear English.
 
 
 async def run_full(child_message: str, child_age: int) -> str:
-    """Full pipeline: analysis + 3 responses + coaching tips."""
+    """
+    Full pipeline: analysis + 3 responses + coaching tips.
+    """
     client = get_client()
 
     prompt = f"""
@@ -54,27 +60,27 @@ A parent comes to you with the following situation:
 - Child's age: {child_age}
 - Child's message: "{child_message}"
 
-Produce a structured response with **three sections**:
+Produce a structured response with three sections:
 
 ### 1. Emotion & Needs Analysis
 - Describe the child’s likely primary and secondary emotions.
 - Identify 2–4 key underlying needs (e.g., autonomy, fun/play, competence, connection).
-- Keep it concise (1–2 short paragraphs + a bullet list).
+- Keep it concise (1–2 short paragraphs and a bullet list).
 
 ### 2. Suggested Parent Responses (3 options)
-Provide exactly **three** example parent responses that:
+Provide exactly three example parent responses that:
 - Validate the child's feelings.
 - Avoid lecturing or blaming.
-- Maintain boundaries if needed (e.g., bedtime still happens).
+- Maintain boundaries if needed (for example, bedtime still happens).
 
-Format:
+Format them as:
 1. "..."
 2. "..."
 3. "..."
 
 ### 3. Coaching Tips for the Parent
 Provide 4–6 concise bullet points explaining:
-- Why the responses help de-escalate the situation.
+- Why these responses help de-escalate the situation.
 - Common pitfalls to avoid.
 - How to adjust tone for a {child_age}-year-old child.
 
@@ -89,7 +95,7 @@ Write in clear, simple English for stressed parents.
 
 
 def main() -> None:
-    """Command-line entry point for local/Kaggle testing."""
+    """Command-line entry point for local or Kaggle testing."""
     api_key = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
         print("⚠ GOOGLE_API_KEY is not set.\n")
