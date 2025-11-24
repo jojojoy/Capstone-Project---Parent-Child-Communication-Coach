@@ -2,7 +2,7 @@
 Simple CLI / script entrypoint to talk to the Parent–Child Communication Coach
 agent defined in agent.py.
 
-Usage (after setting GOOGLE_GENAI_API_KEY in your environment):
+Usage (after setting GOOGLE_API_KEY in your environment):
 
     python main.py
 """
@@ -75,10 +75,10 @@ async def run_once(child_message: str, child_age: int) -> str:
 
 
 def main():
-    api_key = os.environ.get("GOOGLE_GENAI_API_KEY")
+    api_key = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
         print(
-            "⚠️  WARNING: GOOGLE_GENAI_API_KEY is not set.\n"
+            "⚠️  WARNING: GOOGLE_API_KEY is not set.\n"
             "    Set it before running this script so Gemini can be called."
         )
 
